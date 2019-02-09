@@ -12,21 +12,39 @@ call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
 
-" let Vundle manage Vundle, required
+"LEADER
+:let mapleader = " "
+
+"let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 "Plugin 'w0rp/ale'
+Plugin 'Valloric/YouCompleteMe'
 Plugin 'scrooloose/syntastic'
 Plugin 'scrooloose/nerdtree'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-Plugin 'flazz/vim-colorschemes'
+Plugin 'nvie/vim-flake8'
 call vundle#end()            " required
 filetype plugin on    " required
 
+"SINGNAL COLUMN
+set signcolumn = "yes"
+autocmd BufEnter * sign define dummy
+autocmd BufEnter * execute 'sign place 9999 line=1 name=dummy buffer=' . bufnr('')
+
+
+"YOUCOMPLETEME CONFIG
+let g:ycm_show_diagnostics_ui = 1
+let g:ycm_add_preview_to_completeopt = 1 
+let g:ycm_autoclose_preview_window_after_completion = 1 
+nnoremap <leader>/ :YcmCompleter GetDoc<CR> 
+"nnoremap <leader>s :YcmCompleter GoTo<CR>
+let g:ycm_register_as_syntastic_checker = 1
+
 "SYNTASTIC CONFIG
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
 "let g:syntastic_always_populate_loc_list = 1
 "let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
@@ -34,10 +52,9 @@ let g:syntastic_check_on_wq = 0
 
 "AIRLINE CONFIG
 let g:airline#extensions#tabline#enabled = 1
-
 "let g:airline_powerline_fonts = 3
 if !exists('g:airline_symbols')
- let g:airline_symbols = {}
+	let g:airline_symbols = {}
 endif
 "let g:airline_left_sep = '▶'
 "let g:airline_right_sep = '◀'
@@ -84,7 +101,7 @@ set number
 syntax on
 
 "Set colorscheme
-colorscheme oceanblack256_remastered
+colorscheme oceanblack256
 
 "Display information at the bottom of the window
 set ruler laststatus=2 number title hlsearch
@@ -154,8 +171,6 @@ map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l 
 
-
-
 "Newtab
 nnoremap <C-n> :tabnew .<CR>
 
@@ -167,7 +182,7 @@ map <F6> :ALEToggle <CR>
 "Syntastic Mode
 map <F5> :SyntasticToggleMode <CR>
 "Spellcheck
-map <F7> :setlocal spell! spelllang=en_us<CR>
+map <F9> :setlocal spell! spelllang=en_us<CR>
 
 "Map H and L to previous and next tab
 nnoremap H gT

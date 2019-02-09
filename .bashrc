@@ -1,6 +1,7 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
+source /etc/environment
 
 # Enable git tab completion
 source ~/.git-completion.bash
@@ -144,6 +145,16 @@ alias install='sudo apt-get install'
 
 #mpi2
 alias mpi='mpiexec -np 2'
+#Xilinx Vivado
+alias xilviv='source /tools/Xilinx/Vivado/2018.3/settings64.sh;vivado'
+#Xilinx SDK
+alias xilsdk='source /tools/Xilinx/SDK/2018.3/settings64.sh;xsdk'
+#Python Environment
+alias pyenv='source ~/py_env/def_env/bin/activate'
+#Java Compiler
+alias jc='javac -d .'
+#Android Studio
+alias androids='/opt/android-studio/bin/studio.sh'
 
 
 # Add an "alert" alias for long running commands.  Use like so:
