@@ -19,7 +19,7 @@ hi SyntasticStyleWarningSign guifg=white guibg=black
 
 
 "Normal text
-hi Normal guifg=#eeeeee guibg=#000000 guisp=#000000 gui=NONE ctermfg=253 ctermbg=NONE cterm=NONE
+hi Normal guifg=#ffffff guibg=#000000 guisp=#000000 gui=NONE ctermfg=253 ctermbg=NONE cterm=NONE
 
 "hi TabLineSel -- no settings --
 "hi CTagsMember -- no settings --
