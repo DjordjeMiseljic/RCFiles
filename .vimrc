@@ -6,6 +6,9 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
+" **********************************************************
+" 					PLUGIN CONFIGURATION
+" **********************************************************
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -15,84 +18,60 @@ call vundle#begin()
 "LEADER
 :let mapleader = " "
 
-"let Vundle manage Vundle, required
+"let Vundle manage Vundle, 				 "required
 Plugin 'VundleVim/Vundle.vim'
-"Plugin 'w0rp/ale'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'scrooloose/syntastic'
+Plugin 'dense-analysis/ale'
+"Plugin 'Valloric/YouCompleteMe'
+"Plugin 'scrooloose/syntastic'
 Plugin 'scrooloose/nerdtree'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'nvie/vim-flake8'
-call vundle#end()            " required
-filetype plugin on    " required
+call vundle#end()            				 "required
+filetype plugin on   						 "required
 
-"SINGNAL COLUMN
-set signcolumn = "yes"
-autocmd BufEnter * sign define dummy
-autocmd BufEnter * execute 'sign place 9999 line=1 name=dummy buffer=' . bufnr('')
-
-
-"YOUCOMPLETEME CONFIG
-let g:ycm_show_diagnostics_ui = 1
-let g:ycm_add_preview_to_completeopt = 1 
-let g:ycm_autoclose_preview_window_after_completion = 1 
-nnoremap <leader>/ :YcmCompleter GetDoc<CR> 
+"YOUCOMPLETEME CONFIG **************************************
+"let g:ycm_show_diagnostics_ui = 1
+"let g:ycm_add_preview_to_completeopt = 1 
+"let g:ycm_autoclose_preview_window_after_completion = 1 
+"nnoremap <leader>/ :YcmCompleter GetDoc<CR> 
 "nnoremap <leader>s :YcmCompleter GoTo<CR>
-let g:ycm_register_as_syntastic_checker = 1
+"let g:ycm_register_as_syntastic_checker = 1
 
-"SYNTASTIC CONFIG
+"SYNTASTIC CONFIG ******************************************
 "set statusline+=%#warningmsg#
 "set statusline+=%{SyntasticStatuslineFlag()}
 "set statusline+=%*
 "let g:syntastic_always_populate_loc_list = 1
 "let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
+"let g:syntastic_check_on_open = 1
+"let g:syntastic_check_on_wq = 0
 
-"AIRLINE CONFIG
-let g:airline#extensions#tabline#enabled = 1
-"let g:airline_powerline_fonts = 3
+"ALE CONFIG ************************************************
+let g:ale_completion_enabled = 1
+
+"AIRLINE CONFIG ********************************************
+"let g:airline_left_sep = '>'
+"let g:airline_right_sep = '<'
+"let g:airline#extensions#tabline#enabled = 1
+"let g:airline_powerline_fonts = 1
+let g:airline_symbols_ascii = 1
 if !exists('g:airline_symbols')
 	let g:airline_symbols = {}
 endif
-"let g:airline_left_sep = '▶'
-"let g:airline_right_sep = '◀'
 let g:airline_theme='angr'
- 
-"set diffexpr=MyDiff()
-"function MyDiff()
-"  let opt = '-a --binary '
-"  if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
-"  if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
-"  let arg1 = v:fname_in
-"  if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
-"  let arg2 = v:fname_new
-"  if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
-"  let arg3 = v:fname_out
-"  if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
-"  if $VIMRUNTIME =~ ' '
-"    if &sh =~ '\<cmd'
-"      if empty(&shellxquote)
-"        let l:shxq_sav = ''
-"        set shellxquote&
-"      endif
-"      let cmd = '"' . $VIMRUNTIME . '\diff"'
-"    else
-"      let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
-"    endif
-"  else
-"    let cmd = $VIMRUNTIME . '\diff'
-"  endif
-"  silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3
-"  if exists('l:shxq_sav')
-"    let &shellxquote=l:shxq_sav
-"  endif
-"endfunction
+let g:airline#extensions#ale#enabled = 1
+
+" *********************************************************
+" 					GENERAL CONFIGURATION
+" *********************************************************
+"SINGNAL COLUMN
+set signcolumn = "yes"
+autocmd BufEnter * sign define dummy
+autocmd BufEnter * execute 'sign place 9999 line=1 name=dummy buffer=' . bufnr('')
 
 set t_Co=256
 set background=dark
-
 
 "Display numbers of lines
 set number
@@ -124,9 +103,6 @@ set smartindent
 
 "Tab is now space the same as doint space 3 times
 "set expandtab
-
-"Plugin related
-"execute pathogen#infect()
 
 "KEY MAP
 "Map Alt+a to sellect all and copy
@@ -178,9 +154,9 @@ nnoremap <C-n> :tabnew .<CR>
 nnoremap <S-Tab> :NERDTreeToggle <CR>
 
 "ALE Toggle
-map <F6> :ALEToggle <CR>
+map <F5> :ALEToggle <CR>
 "Syntastic Mode
-map <F5> :SyntasticToggleMode <CR>
+map <F6> :SyntasticToggleMode <CR>
 "Spellcheck
 map <F9> :setlocal spell! spelllang=en_us<CR>
 
@@ -196,12 +172,9 @@ vnoremap // y/<C-R>"<CR>
 "In visual mode selected text will be searched for and then replaced
 vnoremap <A-/> "hy:%s/<C-r>h//gc<left><left><left>
 
-
 "fullscreen
 if has('gui_running')
     set lines=999 columns=999
 endif
 
-"let g:airline#extensions#ale#enabled = 1
-"let g:ale_completion_enabled = 1
 
