@@ -2,33 +2,72 @@
 "source $VIMRUNTIME/mswin.vim
 "behave mswin
 
-"VUNDLE
+"Recognize .auto files as verilog
+au BufRead,BufNewFile *.auto set filetype=verilog
+
+" VUNDLE Required
 set nocompatible              " be iMproved, required
 filetype off                  " required
-
 " **********************************************************
-" 					PLUGIN CONFIGURATION
+"                PLUGIN CONFIGURATION
 " **********************************************************
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
-
 "LEADER
 :let mapleader = " "
 
-"let Vundle manage Vundle, 				 "required
+" Let Vundle manage Vundle
 Plugin 'VundleVim/Vundle.vim'
+
+" Linters
 Plugin 'dense-analysis/ale'
 "Plugin 'Valloric/YouCompleteMe'
 "Plugin 'scrooloose/syntastic'
-Plugin 'scrooloose/nerdtree'
+"Plugin 'nvie/vim-flake8'
+
+" Filesystem, netrw is good enough
+"Plugin 'scrooloose/nerdtree'
+
+" Bottom panel
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-Plugin 'nvie/vim-flake8'
-call vundle#end()            				 "required
-filetype plugin on   						 "required
+
+" CSV Readability
+Plugin 'mechatroner/rainbow_csv'
+
+" HDL Support
+Plugin 'vhda/verilog_systemverilog.vim'
+Plugin 'antoinemadec/vim-verilog-instance'
+
+call vundle#end()    "required
+filetype plugin on  "required
+
+"ALE CONFIG ************************************************
+let g:ale_completion_enabled = 1
+" Set explicit linter in next command, don't search for them
+let g:ale_linters_explicit = 1
+" Used linters
+let g:ale_linters = {
+      \ 'systemverilog': ['verilator'],
+      \ 'verilog':       ['verilator'],
+      \ }
+"Other linters
+      "\ 'systemverilog': ['iverilog'],
+      "\ 'verilog':       ['iverilog'],
+" Used fixers
+let g:ale_fixers = {
+      \ '*': ['remove_trailing_lines'],
+      \ }
+" Additional arguments passed to linters, needed to search dirs
+"let g:ale_verilog_verilator_options='-f .hdl_files'
+let g:ale_verilog_verilator_options='-f .search_dirs'
+"let g:ale_verilog_iverilog_options='-g2012 -grelative-include -c.search_dirs'
+
+"On open, create a new file containing paths of all hdl files
+"autocmd VimEnter * :silent !find . -not -path '*/.*' -not -name '*tb*' -type f -name '*.sv' -or -name '*.v' -or -name '*.vh' > .hdl_files
+autocmd VimEnter * :silent !find . -type d > .all_dirs
+autocmd VimEnter * :silent !sed 's/.*/-y &/' .all_dirs > .search_dirs
 
 "YOUCOMPLETEME CONFIG **************************************
 "let g:ycm_show_diagnostics_ui = 1
@@ -47,8 +86,6 @@ filetype plugin on   						 "required
 "let g:syntastic_check_on_open = 1
 "let g:syntastic_check_on_wq = 0
 
-"ALE CONFIG ************************************************
-let g:ale_completion_enabled = 1
 
 "AIRLINE CONFIG ********************************************
 "let g:airline_left_sep = '>'
@@ -62,13 +99,19 @@ endif
 let g:airline_theme='angr'
 let g:airline#extensions#ale#enabled = 1
 
+"AUTOVERILOG CONFIG ********************************************
+let g:VerilogModePath='~/elisp/verilog-mode.el'
+"let g:VerilogModeAddKey = <mapleader>a
+"let g:VerilogModeDeleteKey = <mapleader>d
+
+
 " *********************************************************
-" 					GENERAL CONFIGURATION
+"               GENERAL CONFIGURATION
 " *********************************************************
 "SINGNAL COLUMN
-set signcolumn = "yes"
 autocmd BufEnter * sign define dummy
 autocmd BufEnter * execute 'sign place 9999 line=1 name=dummy buffer=' . bufnr('')
+
 
 set t_Co=256
 set background=dark
@@ -90,49 +133,44 @@ set visualbell
 set belloff=all
 
 "Remove menu 
-set guioptions-=m
-set guioptions-=M
-set guioptions-=T
+"set guioptions-=m
+"set guioptions-=M
+"set guioptions-=T
 
 "Set tab width to 3 spaces
 set tabstop=3
 set shiftwidth=3
 
 "Set indentation for programming
-set smartindent
+"set smartindent
 
 "Tab is now space the same as doint space 3 times
-"set expandtab
+set expandtab
 
 "KEY MAP
-"Map Alt+a to sellect all and copy
-nnoremap <A-a> gg"+VG
+"Map Ctrl+a to sellect all and copy
+nnoremap <C-a> gg"+VG
 
-"Map Alt+hjkl to move maximally in respective directions
-map <A-h> 0
-map <A-l> $
-map <A-j> G
-map <A-k> gg
 
-"Map Alt+oO to insert new lines without exiting normal mode
-map <A-o> o<esc>
-map <A-O> O<esc>
+"Map Ctrl+oO to insert new lines without exiting normal mode
+map <C-o> o<esc>
+map <C-O> O<esc>
 
-"Map Alt+pP to paste in new lines without exiting normal mode
-nnoremap <A-p> o<esc>p
-nnoremap <A-P> O<esc>p
+"Map Ctrl+pP to paste in new lines without exiting normal mode
+nnoremap <C-p> o<esc>p
+nnoremap <C-P> O<esc>p
 
 "C Comment shortcuts
-nnoremap <A-,> I/*<esc>
-nnoremap <A-.> A*/<esc>
-nnoremap <A-/> I//<esc>
+nnoremap <C-,> I/*<esc>
+nnoremap <C-.> A*/<esc>
+nnoremap <C-/> I//<esc>
 
 "Press j+k at approx. sam time to exit insert mode
 inoremap jk <esc>
 inoremap kj <esc>
 
 "Bracket manipulation
-inoremap {} <CR>{<CR>}<C-o>==<C-o>O
+"inoremap {} <CR>{<CR>}<C-o>==<C-o>O
 inoremap () ()<left>
 inoremap (); ();
 inoremap ()<lt> ()<lt>
@@ -141,7 +179,7 @@ inoremap "" ""<left>
 inoremap [] []<left>
 inoremap (){} ()<CR>{<CR>}<C-o>==<C-o>O
 
-"Move trough panes 
+"Move trough panes of split window
 map <C-j> <C-W>j
 map <C-k> <C-W>k
 map <C-h> <C-W>h
@@ -152,6 +190,11 @@ nnoremap <C-n> :tabnew .<CR>
 
 "NERDTree toggle
 nnoremap <S-Tab> :NERDTreeToggle <CR>
+
+"When in visual repeat last command for each line
+vnoremap . :normal .<CR>
+vnoremap q :normal @q<CR>
+
 
 "ALE Toggle
 map <F5> :ALEToggle <CR>
@@ -171,6 +214,9 @@ nnoremap <silent> <A-L> :+tabmove<cr>
 vnoremap // y/<C-R>"<CR>
 "In visual mode selected text will be searched for and then replaced
 vnoremap <A-/> "hy:%s/<C-r>h//gc<left><left><left>
+
+"Call SMN with Ctrl+m
+nnoremap <C-m> :SMN <CR>
 
 "fullscreen
 if has('gui_running')
